@@ -1,0 +1,137 @@
+#IPTABLES Default Ubuntu VUltr
+iptables -P INPUT DROP
+iptables -P FORWARD DROP
+iptables -P OUTPUT ACCEPT
+iptables -N DOCKER
+iptables -N DOCKER-ISOLATION-STAGE-1
+iptables -N DOCKER-ISOLATION-STAGE-2
+iptables -N DOCKER-USER
+iptables -N ufw-after-forward
+iptables -N ufw-after-input
+iptables -N ufw-after-logging-forward
+iptables -N ufw-after-logging-input
+iptables -N ufw-after-logging-output
+iptables -N ufw-after-output
+iptables -N ufw-before-forward
+iptables -N ufw-before-input
+iptables -N ufw-before-logging-forward
+iptables -N ufw-before-logging-input
+iptables -N ufw-before-logging-output
+iptables -N ufw-before-output
+iptables -N ufw-logging-allow
+iptables -N ufw-logging-deny
+iptables -N ufw-not-local
+iptables -N ufw-reject-forward
+iptables -N ufw-reject-input
+iptables -N ufw-reject-output
+iptables -N ufw-skip-to-policy-forward
+iptables -N ufw-skip-to-policy-input
+iptables -N ufw-skip-to-policy-output
+iptables -N ufw-track-forward
+iptables -N ufw-track-input
+iptables -N ufw-track-output
+iptables -N ufw-user-forward
+iptables -N ufw-user-input
+iptables -N ufw-user-limit
+iptables -N ufw-user-limit-accept
+iptables -N ufw-user-logging-forward
+iptables -N ufw-user-logging-input
+iptables -N ufw-user-logging-output
+iptables -N ufw-user-output
+iptables -A INPUT -j ufw-before-logging-input
+iptables -A INPUT -j ufw-before-input
+iptables -A INPUT -j ufw-after-input
+iptables -A INPUT -j ufw-after-logging-input
+iptables -A INPUT -j ufw-reject-input
+iptables -A INPUT -j ufw-track-input
+iptables -A INPUT -p tcp -m tcp --dport 3000 -j DROP
+iptables -A FORWARD -j DOCKER-USER
+iptables -A FORWARD -j DOCKER-ISOLATION-STAGE-1
+iptables -A FORWARD -o br-6819fd9e21b0 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -o br-6819fd9e21b0 -j DOCKER
+iptables -A FORWARD -i br-6819fd9e21b0 ! -o br-6819fd9e21b0 -j ACCEPT
+iptables -A FORWARD -i br-6819fd9e21b0 -o br-6819fd9e21b0 -j ACCEPT
+iptables -A FORWARD -o br-6d3afcfc9c6e -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -o br-6d3afcfc9c6e -j DOCKER
+iptables -A FORWARD -i br-6d3afcfc9c6e ! -o br-6d3afcfc9c6e -j ACCEPT
+iptables -A FORWARD -i br-6d3afcfc9c6e -o br-6d3afcfc9c6e -j ACCEPT
+iptables -A FORWARD -o docker0 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -o docker0 -j DOCKER
+iptables -A FORWARD -i docker0 ! -o docker0 -j ACCEPT
+iptables -A FORWARD -i docker0 -o docker0 -j ACCEPT
+iptables -A FORWARD -j ufw-before-logging-forward
+iptables -A FORWARD -j ufw-before-forward
+iptables -A FORWARD -j ufw-after-forward
+iptables -A FORWARD -j ufw-after-logging-forward
+iptables -A FORWARD -j ufw-reject-forward
+iptables -A FORWARD -j ufw-track-forward
+iptables -A OUTPUT -j ufw-before-logging-output
+iptables -A OUTPUT -j ufw-before-output
+iptables -A OUTPUT -j ufw-after-output
+iptables -A OUTPUT -j ufw-after-logging-output
+iptables -A OUTPUT -j ufw-reject-output
+iptables -A OUTPUT -j ufw-track-output
+iptables -A OUTPUT -p tcp -m tcp --dport 3000 -j DROP
+iptables -A DOCKER -d 172.20.0.2/32 ! -i br-6819fd9e21b0 -o br-6819fd9e21b0 -p tcp -m tcp --dport 3000 -j ACCEPT
+iptables -A DOCKER-ISOLATION-STAGE-1 -i br-6819fd9e21b0 ! -o br-6819fd9e21b0 -j DOCKER-ISOLATION-STAGE-2
+iptables -A DOCKER-ISOLATION-STAGE-1 -i br-6d3afcfc9c6e ! -o br-6d3afcfc9c6e -j DOCKER-ISOLATION-STAGE-2
+iptables -A DOCKER-ISOLATION-STAGE-1 -i docker0 ! -o docker0 -j DOCKER-ISOLATION-STAGE-2
+iptables -A DOCKER-ISOLATION-STAGE-1 -j RETURN
+iptables -A DOCKER-ISOLATION-STAGE-2 -o br-6819fd9e21b0 -j DROP
+iptables -A DOCKER-ISOLATION-STAGE-2 -o br-6d3afcfc9c6e -j DROP
+iptables -A DOCKER-ISOLATION-STAGE-2 -o docker0 -j DROP
+iptables -A DOCKER-ISOLATION-STAGE-2 -j RETURN
+iptables -A DOCKER-USER -j RETURN
+iptables -A ufw-after-input -p udp -m udp --dport 137 -j ufw-skip-to-policy-input
+iptables -A ufw-after-input -p udp -m udp --dport 138 -j ufw-skip-to-policy-input
+iptables -A ufw-after-input -p tcp -m tcp --dport 139 -j ufw-skip-to-policy-input
+iptables -A ufw-after-input -p tcp -m tcp --dport 445 -j ufw-skip-to-policy-input
+iptables -A ufw-after-input -p udp -m udp --dport 67 -j ufw-skip-to-policy-input
+iptables -A ufw-after-input -p udp -m udp --dport 68 -j ufw-skip-to-policy-input
+iptables -A ufw-after-input -m addrtype --dst-type BROADCAST -j ufw-skip-to-policy-input
+iptables -A ufw-after-logging-forward -m limit --limit 3/min --limit-burst 10 -j LOG --log-prefix "[UFW BLOCK] "
+iptables -A ufw-after-logging-input -m limit --limit 3/min --limit-burst 10 -j LOG --log-prefix "[UFW BLOCK] "
+iptables -A ufw-before-forward -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+iptables -A ufw-before-forward -p icmp -m icmp --icmp-type 3 -j ACCEPT
+iptables -A ufw-before-forward -p icmp -m icmp --icmp-type 11 -j ACCEPT
+iptables -A ufw-before-forward -p icmp -m icmp --icmp-type 12 -j ACCEPT
+iptables -A ufw-before-forward -p icmp -m icmp --icmp-type 8 -j ACCEPT
+iptables -A ufw-before-forward -j ufw-user-forward
+iptables -A ufw-before-input -i lo -j ACCEPT
+iptables -A ufw-before-input -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+iptables -A ufw-before-input -m conntrack --ctstate INVALID -j ufw-logging-deny
+iptables -A ufw-before-input -m conntrack --ctstate INVALID -j DROP
+iptables -A ufw-before-input -p icmp -m icmp --icmp-type 3 -j ACCEPT
+iptables -A ufw-before-input -p icmp -m icmp --icmp-type 11 -j ACCEPT
+iptables -A ufw-before-input -p icmp -m icmp --icmp-type 12 -j ACCEPT
+iptables -A ufw-before-input -p icmp -m icmp --icmp-type 8 -j ACCEPT
+iptables -A ufw-before-input -p udp -m udp --sport 67 --dport 68 -j ACCEPT
+iptables -A ufw-before-input -j ufw-not-local
+iptables -A ufw-before-input -d 224.0.0.251/32 -p udp -m udp --dport 5353 -j ACCEPT
+iptables -A ufw-before-input -d 239.255.255.250/32 -p udp -m udp --dport 1900 -j ACCEPT
+iptables -A ufw-before-input -j ufw-user-input
+iptables -A ufw-before-output -o lo -j ACCEPT
+iptables -A ufw-before-output -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+iptables -A ufw-before-output -j ufw-user-output
+iptables -A ufw-logging-allow -m limit --limit 3/min --limit-burst 10 -j LOG --log-prefix "[UFW ALLOW] "
+iptables -A ufw-logging-deny -m conntrack --ctstate INVALID -m limit --limit 3/min --limit-burst 10 -j RETURN
+iptables -A ufw-logging-deny -m limit --limit 3/min --limit-burst 10 -j LOG --log-prefix "[UFW BLOCK] "
+iptables -A ufw-not-local -m addrtype --dst-type LOCAL -j RETURN
+iptables -A ufw-not-local -m addrtype --dst-type MULTICAST -j RETURN
+iptables -A ufw-not-local -m addrtype --dst-type BROADCAST -j RETURN
+iptables -A ufw-not-local -m limit --limit 3/min --limit-burst 10 -j ufw-logging-deny
+iptables -A ufw-not-local -j DROP
+iptables -A ufw-skip-to-policy-forward -j DROP
+iptables -A ufw-skip-to-policy-input -j DROP
+iptables -A ufw-skip-to-policy-output -j ACCEPT
+iptables -A ufw-track-output -p tcp -m conntrack --ctstate NEW -j ACCEPT
+iptables -A ufw-track-output -p udp -m conntrack --ctstate NEW -j ACCEPT
+iptables -A ufw-user-input -p tcp -m tcp --dport 22 -j ACCEPT
+iptables -A ufw-user-input -p tcp -m tcp --dport 80 -j ACCEPT
+iptables -A ufw-user-input -p tcp -m tcp --dport 443 -j ACCEPT
+iptables -A ufw-user-input -p tcp -m tcp --dport 3001 -j ACCEPT
+iptables -A ufw-user-input -p tcp -m tcp --dport 3000 -j DROP
+iptables -A ufw-user-input -p udp -m udp --dport 3000 -j DROP
+iptables -A ufw-user-limit -m limit --limit 3/min -j LOG --log-prefix "[UFW LIMIT BLOCK] "
+iptables -A ufw-user-limit -j REJECT --reject-with icmp-port-unreachable
+iptables -A ufw-user-limit-accept -j ACCEPT
