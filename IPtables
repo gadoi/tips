@@ -169,4 +169,4 @@ num  target     prot opt source               destination
 iptables -D DOCKER 1
 
 
-https://www.codegrepper.com/code-examples/shell/iptables+remove+port
+https://www.codegrepper.com/search.php?q=iptables%20remove%20rule
