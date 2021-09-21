@@ -135,3 +135,38 @@ iptables -A ufw-user-input -p udp -m udp --dport 3000 -j DROP
 iptables -A ufw-user-limit -m limit --limit 3/min -j LOG --log-prefix "[UFW LIMIT BLOCK] "
 iptables -A ufw-user-limit -j REJECT --reject-with icmp-port-unreachable
 iptables -A ufw-user-limit-accept -j ACCEPT
+
+#View and Delete Rules
+iptables -S | grep 3000
+
+-A INPUT -p tcp -m tcp --dport 3000 -j DROP
+-A OUTPUT -p tcp -m tcp --dport 3000 -j DROP
+-A DOCKER -d 172.30.0.2/32 ! -i br-ed4fec708b20 -o br-ed4fec708b20 -p tcp -m tcp --dport 3000 -j ACCEPT
+-A DOCKER -d 172.20.0.2/32 ! -i br-6819fd9e21b0 -o br-6819fd9e21b0 -p tcp -m tcp --dport 3000 -j ACCEPT
+-A ufw-user-input -p tcp -m tcp --dport 3000 -j DROP
+-A ufw-user-input -p udp -m udp --dport 3000 -j DROP
+
+iptables -L INPUT --line-numbers
+Chain INPUT (policy DROP)
+num  target     prot opt source               destination         
+1    ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:ssh
+2    ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:http
+3    ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:https
+4    ufw-before-logging-input  all  --  anywhere             anywhere            
+5    ufw-before-input  all  --  anywhere             anywhere            
+6    ufw-after-input  all  --  anywhere             anywhere            
+7    ufw-after-logging-input  all  --  anywhere             anywhere            
+8    ufw-reject-input  all  --  anywhere             anywhere            
+9    ufw-track-input  all  --  anywhere             anywhere            
+10   DROP       tcp  --  anywhere             anywhere             tcp dpt:3000
+
+iptables -L DOCKER --line-numbers
+Chain DOCKER (4 references)
+num  target     prot opt source               destination         
+1    ACCEPT     tcp  --  anywhere             172.30.0.2           tcp dpt:3000
+2    ACCEPT     tcp  --  anywhere             172.20.0.2           tcp dpt:3000
+
+iptables -D DOCKER 1
+
+
+https://www.codegrepper.com/code-examples/shell/iptables+remove+port
