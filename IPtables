@@ -169,4 +169,23 @@ num  target     prot opt source               destination
 iptables -D DOCKER 1
 
 
+
+#List out all of the active iptables rules with verbose
+
+iptables -n -L -v
+
+#List out all of the active iptables rules with numeric lines and verbose
+
+iptables -n -L -v --line-numbers
+
+#Print out all of the active iptables rules
+
+iptables -S
+
+#List Rules as Tables for INPUT chain
+
+iptables -L INPUT
+
+
+https://github.com/trimstray/iptables-essentials
 https://www.codegrepper.com/search.php?q=iptables%20remove%20rule
