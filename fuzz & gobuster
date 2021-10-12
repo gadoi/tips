@@ -1,0 +1,19 @@
+Scan sub directory
+ffuf -u http://api-prod.horizontall.htb/FUZZ -w /usr/share/wordlists/dirb/common.txt
+gobuster dir -u http://api-prod.horizontall.htb/ -w /usr/share/wordlists/dirb/common.txt
+
+scan subdomain vs dns
+
+gobuster dns -d horizontall.htb -w /usr/share/SecLists/Discovery/DNS/namelist.txt
+
+Scan vhost
+gobuster vhost -u horizontall.htb -w subdomains-top1million-110000.txt --threads 50
+
+ffuf -w subdomains.txt -u http://horizontall.htb -H “Host: FUZZ.horizontal.htb”
+ffuf -w /usr/share/wordlists/dirb/common.txt -u http://horizontall.htb -H "Host: FUZZ" -fs 4242
+
+
+source FFUZ
+https://github.com/ffuf/ffuf#virtual-host-discovery-without-dns-records
+https://hakin9.org/ffuf-a-fast-web-fuzzer-written-in-go/
+https://medium.com/quiknapp/fuzz-faster-with-ffuf-c18c031fc480
