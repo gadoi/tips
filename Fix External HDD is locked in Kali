@@ -8,11 +8,11 @@ tmpfs           795M  1.4M  793M   1% /run
 tmpfs           3.9G  150M  3.8G   4% /dev/shm
 tmpfs           5.0M     0  5.0M   0% /run/lock
 tmpfs           795M  116K  794M   1% /run/user/1000
-/dev/sdb3       434G  107M  434G   1% /media/gd/New Volume
-/dev/sdb1        98G  136M   98G   1% /media/gd/hdd1
-/dev/sdb2       401G  106M  401G   1% /media/gd/New Volume1
-/dev/sda1        75G   59G   17G  78% /media/gd/winold
-/dev/sda2       293G  233G   61G  80% /media/gd/DATA
+/dev/sdb3       434G  107M  434G   1% /media/gd/NewVolume
+/dev/sdb1        98G  136M   98G   1% /media/gd/hdd12
+/dev/sdb2       401G  106M  401G   1% /media/gd/NewVolume1
+/dev/sda1        75G   59G   17G  78% /media/gd/winold1
+/dev/sda2       293G  233G   61G  80% /media/gd/Data1
                                                                                                                                                                  
 (base) ┌──(root💀lucy)-[/home/gd/Downloads]
 └─# ntfsfix /dev/sdb2
