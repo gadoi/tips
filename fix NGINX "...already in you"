@@ -1,0 +1,3 @@
+[emerg]: bind() to 0.0.0.0:80 failed (98: Address already in use)
+KILL by command
+sudo fuser -k 80/tcp
