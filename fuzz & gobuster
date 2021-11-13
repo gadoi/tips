@@ -12,6 +12,15 @@ gobuster vhost -u horizontall.htb -w subdomains-top1million-110000.txt --threads
 ffuf -w subdomains.txt -u http://horizontall.htb -H “Host: FUZZ.horizontal.htb”
 ffuf -w /usr/share/wordlists/dirb/common.txt -u http://horizontall.htb -H "Host: FUZZ" -fs 4242
 
+Directory and File Discovery
+The directories on the website can be discovered with the following command which gives ffuf a word-list with -w flag and URL with -u command which contains the word FUZZ, that signifies the position to be fuzzed.
+    ffuf -w wordlist.txt -u http://website.com/FUZZ
+
+For file discovery, the same command can be used and for using specific extensions with the word-list’s entries, the -e flag can be used.
+
+    ffuf -w wordlist.txt -u http://website.com/FUZZ -e .aspx,.html,.php,.txt
+    
+eg: ffuf -w /usr/share/wordlists/dirb/common.txt -u http://jokerctf.thm/FUZZ -e .aspx,.html,.php,.txt
 
 source FFUZ
 https://github.com/ffuf/ffuf#virtual-host-discovery-without-dns-records
