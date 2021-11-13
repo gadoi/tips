@@ -20,8 +20,14 @@ For file discovery, the same command can be used and for using specific extensio
 
     ffuf -w wordlist.txt -u http://website.com/FUZZ -e .aspx,.html,.php,.txt
     
-eg: ffuf -w /usr/share/wordlists/dirb/common.txt -u http://jokerctf.thm/FUZZ -e .aspx,.html,.php,.txt
+eg: ffuf -w /usr/share/wordlists/dirb/common.txt -u http://jokerctf.thm/FUZZ -e .aspx,.html,.php,.txt -mc 200,302
 
+
+For getting output of responses with status code 200 and 302 only, use:
+
+    ffuf -w wordlist.txt -w http://website.com/FUZZ -e .aspx,.html -mc 200,302
+    
+    
 source FFUZ
 https://github.com/ffuf/ffuf#virtual-host-discovery-without-dns-records
 https://hakin9.org/ffuf-a-fast-web-fuzzer-written-in-go/
