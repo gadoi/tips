@@ -1,0 +1,7 @@
+Failed to fetch https://http.kali.org/kali/dists/kali-rolling/InRelease
+
+vim /etc/apt/sources.list
+add
+deb http://ftp.acc.umu.se/mirror/kali.org/kali kali-rolling main non-free contrib
+
+https://miloserdov.org/?p=4198
