@@ -1,0 +1,12 @@
+timedatectl
+timedatectl list-timezones | grep Ho
+
+timedatectl set-timezone Asia/Ho_Chi_Minh
+
+$ sudo timedatectl set-ntp on
+OR
+$ sudo timedatectl set-ntp off
+
+sudo apt remove ntp
+
+https://linuxconfig.org/how-to-set-time-on-kali-linux
