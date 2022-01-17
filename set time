@@ -3,10 +3,12 @@ timedatectl list-timezones | grep Ho
 
 timedatectl set-timezone Asia/Ho_Chi_Minh
 
+#Enable System clock synchronization
 $ sudo timedatectl set-ntp on
-OR
+OR Off
 $ sudo timedatectl set-ntp off
 
 sudo apt remove ntp
 
 https://linuxconfig.org/how-to-set-time-on-kali-linux
+https://askubuntu.com/questions/1046214/enable-system-clock-synchronization
