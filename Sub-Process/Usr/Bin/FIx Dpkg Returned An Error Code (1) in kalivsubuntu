@@ -1,0 +1,24 @@
+C1 - Cấu hình lại cơ sở dữ liệu dpkg
+dpkg --configure -a
+
+C2 Force-install
+apt-get install -f
+
+C3
+apt-get remove --purge package_name
+vd : apt-get remove --purge linux-image-5.17.0-kali3-amd64
+
+C4: Dọn sạch các gói phần mềm không sử dụng
+apt autoremove
+
+C5: Xóa Post Files
+ls -l /var/lib/dpkg/info | grep -i package_name
+sudo mv /var/lib/dpkg/info/package_name.* /tmp
+apt update
+
+vd: 
+ls -l /var/lib/dpkg/info | grep -i "linux-image-5.17.0-kali3-amd64" 
+mv /var/lib/dpkg/info/linux-image-5.17.0-kali3-amd64* /tmp
+apt update
+
+https://hocdevops.com/troubleshooting/sua-loi-sub-process-usr-bin-dpkg-returned-an-error-code-1-trong-ubuntu/
